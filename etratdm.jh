@@ -1,0 +1,29 @@
+
+
+
+
+entity Transaction {
+	rrn String,
+    amount BigDecimal,
+    refrence Long
+}
+
+entity TransactionType {
+	description String
+    }
+    
+relationship OneToOne {
+	Transaction{type} to TransactionType
+}
+
+// Set pagination options
+paginate Transaction with pagination
+
+// Use Data Transfert Objects (DTO)
+// dto * with mapstruct
+
+// Set service options to all except few
+service all with serviceImpl
+
+// Set an angular suffix
+// angularSuffix * with mySuffix
