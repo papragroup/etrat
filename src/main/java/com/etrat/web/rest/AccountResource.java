@@ -37,7 +37,7 @@ public class AccountResource {
 
     private final UserRepository userRepository;
 
-    private final UserService userService;
+        private final UserService userService;
 
     private final MailService mailService;
 
