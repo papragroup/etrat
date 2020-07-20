@@ -10,7 +10,7 @@ public class IntegrationJob {
 
     @Autowired
     private EtratWarpperUtil etratWarpperUtil;
-    @Scheduled(fixedDelay = 100000000)
+    @Scheduled(fixedDelay = 60000)
     public void  integrationWithEtart(){
         etratWarpperUtil.getHami();
 

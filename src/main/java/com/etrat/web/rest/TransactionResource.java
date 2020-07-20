@@ -3,6 +3,7 @@ package com.etrat.web.rest;
 import com.etrat.domain.Transaction;
 import com.etrat.repository.TransactionRepository;
 import com.etrat.service.TransactionService;
+import com.etrat.service.dto.HesabDTO;
 import com.etrat.web.rest.errors.BadRequestAlertException;
 
 import io.github.jhipster.web.util.HeaderUtil;
@@ -41,6 +42,9 @@ public class TransactionResource {
 
     private final TransactionService transactionService;
 
+    @Autowired
+    private HesabDTO hesabDTO;
+
     public TransactionResource(TransactionService transactionService) {
         this.transactionService = transactionService;
     }
@@ -65,6 +69,12 @@ public class TransactionResource {
         return ResponseEntity.created(new URI("/api/transactions/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
+    }
+
+    @PostMapping("/verify-transaction")
+    public void createTransaction( String  paymentResponse) {
+        System.out.println(paymentResponse);
+
     }
 
     /**
@@ -100,6 +110,11 @@ public class TransactionResource {
         Page<Transaction> page = transactionService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    @GetMapping("/payment-type")
+    public ResponseEntity<HesabDTO> getPaymentType() {
+        return ResponseEntity.ok().body(hesabDTO);
     }
 
     /**

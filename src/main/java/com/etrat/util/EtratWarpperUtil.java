@@ -1,15 +1,16 @@
 package com.etrat.util;
 
-import com.etrat.domain.User;
-import com.etrat.repository.UserRepository;
+import com.etrat.domain.HamiLastId;
+import com.etrat.repository.HamiLastIdRepository;
 import com.etrat.service.UserService;
 import com.etrat.service.dto.Hami;
 import com.etrat.service.dto.HamiDTO;
 import com.etrat.service.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.Optional;
 
 @Service
 public class EtratWarpperUtil {
@@ -18,13 +19,34 @@ public class EtratWarpperUtil {
     private RestTemplate restTemplate;
     @Autowired
     private UserService userService;
+    @Autowired
+    private HamiLastIdRepository hamiRepository;
 
     public void  getHami(){
-        HamiDTO hamiDTO = restTemplate.getForEntity("http://localhost:8081/api/v1/hami?hami-id=1", HamiDTO.class).getBody();
+        Long lastId = hamiRepository.findById(1l).filter(h -> h != null)
+            .map((h) -> h.getLastHamiId())
+            .orElseGet(() -> {
+                HamiLastId hamiLastId = new HamiLastId();
+                hamiLastId.setLastHamiId(1l);
+                hamiRepository.save(hamiLastId);
+                return hamiLastId.getLastHamiId();
+            });
+        HamiDTO hamiDTO = restTemplate.getForEntity("http://localhost:8081/api/v1/hami?hami-id="+lastId, HamiDTO.class).getBody();
         for (Hami hami:hamiDTO.getHamis()){
-            UserDTO user=new UserDTO();
-            user.setLogin(hami.getShenase().toString());
-            userService.registerUser(user,hami.getShenase().toString());
+            try {
+                UserDTO user=new UserDTO();
+                user.setLogin(hami.getShenase().toString());
+                userService.registerUser(user,hami.getShenase().toString());
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+        }
+        if (!hamiDTO.getHamis().isEmpty()) {
+            Optional<HamiLastId> result= hamiRepository.findById(1l);
+            HamiLastId hamiLastId = result.get();
+            hamiLastId.setLastHamiId(Long.valueOf(hamiDTO.getHamis().get(hamiDTO.getHamis().size()-1).getHamiId()));
+            hamiRepository.save(hamiLastId);
         }
     }
 }
