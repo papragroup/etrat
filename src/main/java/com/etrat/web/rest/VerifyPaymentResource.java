@@ -1,29 +1,13 @@
 package com.etrat.web.rest;
 
 import com.etrat.domain.Transaction;
-import com.etrat.repository.TransactionRepository;
-import com.etrat.service.TransactionService;
-import com.etrat.service.dto.HesabDTO;
-import com.etrat.testverify.useit;
-import com.etrat.web.rest.errors.BadRequestAlertException;
-import io.github.jhipster.web.util.HeaderUtil;
-import io.github.jhipster.web.util.PaginationUtil;
-import io.github.jhipster.web.util.ResponseUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
+import com.etrat.testverify.PaymentIFBindingLocator;
+import com.etrat.testverify.PaymentIFBindingSoap;
+import org.apache.axis.AxisProperties;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
+import javax.xml.rpc.ServiceException;
+import java.rmi.RemoteException;
 
 /**
  * REST controller for managing {@link Transaction}.
@@ -35,11 +19,30 @@ public class VerifyPaymentResource {
     @PostMapping("/verify-transaction")
     public void createTransaction(@RequestBody String  paymentResponse) {
         String s1 = paymentResponse.split("RefNum=")[1].split("&")[0];
-        useit u=new useit();
-        u.verify(s1,null);
-        System.out.println(s1);
+        PaymentIFBindingLocator paymentIFBindingSoapStub = new PaymentIFBindingLocator();
+        PaymentIFBindingSoap paymentIFBinding = null;
+        paymentIFBinding = getPaymentIFBindingSoap(paymentIFBindingSoapStub, paymentIFBinding);
+        try {
+            double d = paymentIFBinding.verifyTransaction(s1, "10822833");
+            System.out.println(d);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
         System.out.println(paymentResponse);
 
+    }
+    private PaymentIFBindingSoap getPaymentIFBindingSoap(PaymentIFBindingLocator paymentIFBindingSoapStub, PaymentIFBindingSoap paymentIFBinding) {
+        try {
+            AxisProperties.getProperties().put("proxySet", "true");
+            AxisProperties.setProperty("http.proxyHost", "us-east-1-static-hopper.statica.io");
+            AxisProperties.setProperty("http.proxyPort", "9293");
+            AxisProperties.setProperty("http.proxyUser", "statica4181");
+            AxisProperties.setProperty("http.proxyPassword", "06361dccd7ec80fb");
+            paymentIFBinding = (PaymentIFBindingSoap) paymentIFBindingSoapStub.getPort(PaymentIFBindingSoap.class);
+        } catch (ServiceException e) {
+            e.printStackTrace();
+        }
+        return paymentIFBinding;
     }
 
     @GetMapping("/verify-transaction")
