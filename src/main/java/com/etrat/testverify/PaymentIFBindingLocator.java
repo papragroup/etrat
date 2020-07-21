@@ -22,7 +22,7 @@ public class PaymentIFBindingLocator extends org.apache.axis.client.Service impl
     }
 
     // Use to get a proxy class for PaymentIFBindingSoap12
-    private String PaymentIFBindingSoap12_address = "https://sep.shaparak.ir/payments/referencepayment.asmx";
+    private String PaymentIFBindingSoap12_address = "http://sep.shaparak.ir/payments/referencepayment.asmx";
 
     public String getPaymentIFBindingSoap12Address() {
         return PaymentIFBindingSoap12_address;
@@ -67,7 +67,7 @@ public class PaymentIFBindingLocator extends org.apache.axis.client.Service impl
 
 
     // Use to get a proxy class for PaymentIFBindingSoap
-    private String PaymentIFBindingSoap_address = "https://sep.shaparak.ir/payments/referencepayment.asmx";
+    private String PaymentIFBindingSoap_address = "http://sep.shaparak.ir/payments/referencepayment.asmx";
 
     public String getPaymentIFBindingSoapAddress() {
         return PaymentIFBindingSoap_address;
