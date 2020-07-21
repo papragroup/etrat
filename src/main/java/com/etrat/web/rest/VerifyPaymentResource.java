@@ -4,6 +4,7 @@ import com.etrat.domain.Transaction;
 import com.etrat.repository.TransactionRepository;
 import com.etrat.service.TransactionService;
 import com.etrat.service.dto.HesabDTO;
+import com.etrat.testverify.useit;
 import com.etrat.web.rest.errors.BadRequestAlertException;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
@@ -36,7 +37,7 @@ public class VerifyPaymentResource {
         String s1 = paymentResponse.split("RefNum=")[1].split("&")[0];
         useit u=new useit();
         u.verify(s1,null);
-        System.out.println(sq);
+        System.out.println(s1);
         System.out.println(paymentResponse);
 
     }
