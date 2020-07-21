@@ -23,7 +23,7 @@ public class VerifyPaymentResource {
         PaymentIFBindingSoap paymentIFBinding = null;
         paymentIFBinding = getPaymentIFBindingSoap(paymentIFBindingSoapStub, paymentIFBinding);
         try {
-            double d = paymentIFBinding.verifyTransaction(s1, "10822833");
+            double d = paymentIFBinding.verifyTransaction(s1, "12130598");
             System.out.println(d);
         } catch (RemoteException e) {
             e.printStackTrace();
