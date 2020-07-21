@@ -33,6 +33,10 @@ public class VerifyPaymentResource {
 
     @PostMapping("/verify-transaction")
     public void createTransaction(@RequestBody String  paymentResponse) {
+        String s1 = paymentResponse.split("RefNum=")[1].split("&")[0];
+        useit u=new useit();
+        u.verify(s1,null);
+        System.out.println(sq);
         System.out.println(paymentResponse);
 
     }
