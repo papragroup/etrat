@@ -9,12 +9,11 @@ import org.springframework.web.client.RestTemplate;
 
 @Component
 public class PaymentTypeConfig {
-
     @Autowired
     private RestTemplate restTemplate;
 
     @Bean
-    public HesabDTO getZohaHesab(){
-        return restTemplate.getForEntity("http://localhost:8081/api/v1/payment-type", HesabDTO.class).getBody();
+    public HesabDTO getZohaHesab() {
+        return restTemplate.getForEntity("http://etrat-warapper/api/v1/payment-type", HesabDTO.class).getBody();
     }
 }
