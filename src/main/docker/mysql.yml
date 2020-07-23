@@ -2,7 +2,7 @@ version: '3'
 
 services:
   mariadb:
-    container_name: 'snappbox-mariadb'
+    container_name: 'etrat-mysql'
     image: mariadb
     command: mysqld --character-set-server=utf8 --collation-server=utf8_general_ci
     restart: always
