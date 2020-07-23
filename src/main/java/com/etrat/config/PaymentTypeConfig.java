@@ -7,13 +7,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-//@Component
+@Component
 public class PaymentTypeConfig {
     @Autowired
     private RestTemplate restTemplate;
 
     @Bean
     public HesabDTO getZohaHesab() {
-        return restTemplate.getForEntity("http://etrat-warapper/api/v1/payment-type", HesabDTO.class).getBody();
+        return restTemplate.getForEntity("http://etrat-warapper:8081/api/v1/payment-type", HesabDTO.class).getBody();
     }
 }
