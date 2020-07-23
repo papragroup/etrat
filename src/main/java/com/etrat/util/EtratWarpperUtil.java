@@ -31,7 +31,7 @@ public class EtratWarpperUtil {
                 hamiRepository.save(hamiLastId);
                 return hamiLastId.getLastHamiId();
             });
-        HamiDTO hamiDTO = restTemplate.getForEntity("http://localhost:8081/api/v1/hami?hami-id="+lastId, HamiDTO.class).getBody();
+        HamiDTO hamiDTO = restTemplate.getForEntity("http://etrat-warraper/api/v1/hami?hami-id="+lastId, HamiDTO.class).getBody();
         for (Hami hami:hamiDTO.getHamis()){
             try {
                 UserDTO user=new UserDTO();
