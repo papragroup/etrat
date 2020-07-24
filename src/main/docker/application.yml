@@ -44,3 +44,4 @@ services:
       - etrat
 networks:
   etrat:
+# finaly this command move to swarm docker stack deploy --compose-file=docker-compose.yml couchbase
