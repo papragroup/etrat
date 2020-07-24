@@ -1,0 +1,41 @@
+version: '3'
+services:
+  etrat:
+    image: etrat
+    environment:
+      - _JAVA_OPTIONS=-Xmx512m -Xms256m
+      - SPRING_PROFILES_ACTIVE=prod,swagger
+      - MANAGEMENT_METRICS_EXPORT_PROMETHEUS_ENABLED=true
+      - SPRING_DATASOURCE_URL=jdbc:mysql://etrat-mysql:3306/etrat
+      - JHIPSTER_SLEEP=30 # gives time for other services to boot before the application
+    ports:
+      - 8080:8080
+    networks:
+      - etrat
+    depends_on:
+      - etart-wrapper
+      - mysql
+  etart-wrapper:
+    image: jhipster
+    environment:
+      - _JAVA_OPTIONS=-Xmx512m -Xms256m
+      - SPRING_PROFILES_ACTIVE=prod,swagger
+      - MANAGEMENT_METRICS_EXPORT_PROMETHEUS_ENABLED=true
+      - JHIPSTER_SLEEP=30 # gives time for other services to boot before the application
+    ports:
+      - 8081:8081
+    networks:
+      - etrat
+  etrat-mysql:
+    image: mariadb
+    command: mysqld --character-set-server=utf8 --collation-server=utf8_general_ci
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - ./provision/mysql/init:/docker-entrypoint-initdb.d
+      - ./provision/mysql/data:/var/lib/mysql
+    ports:
+      - '3306:3306'
+networks:
+  etrat:
