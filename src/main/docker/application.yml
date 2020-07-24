@@ -17,7 +17,7 @@ services:
       - etrat-warapper
       - etrat-mysql
   etrat-warapper:
-    container_name: etrat
+    container_name: etrat-warapper
     image: jhipster
     environment:
       - _JAVA_OPTIONS=-Xmx512m -Xms256m
