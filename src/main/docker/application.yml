@@ -14,10 +14,10 @@ services:
     networks:
       - etrat
     depends_on:
-      - etart-warapper
+      - etrat-warapper
       - etrat-mysql
-  etart-warapper:
-    container_name: etart-warapper
+  etrat-warapper:
+    container_name: etrat
     image: jhipster
     environment:
       - _JAVA_OPTIONS=-Xmx512m -Xms256m
@@ -40,5 +40,6 @@ services:
       - ./provision/mysql/data:/var/lib/mysql
     ports:
       - '3306:3306'
+    networks: -etrat
 networks:
   etrat:
