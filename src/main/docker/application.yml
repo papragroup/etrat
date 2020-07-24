@@ -14,7 +14,7 @@ services:
       - etrat
     depends_on:
       - etart-warapper
-      - mysql
+      - etrat-mysql
   etart-warapper:
     image: jhipster
     environment:
