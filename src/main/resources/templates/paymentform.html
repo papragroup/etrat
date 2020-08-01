@@ -1,0 +1,31 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Spring Boot Thymeleaf Hello World Example</title>
+
+    <link rel="stylesheet" th:href="@{webjars/bootstrap/4.2.1/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+
+</head>
+
+<body>
+
+<form id='samanpeyment' action='https://sep.shaparak.ir/payment.aspx' method='post'>
+    <input type='hidden' name='Amount' value='1000' />
+    <input type='hidden' name='ResNum' value='1'>
+    <input type='hidden' name='RedirectURL' value='http://192.168.101.195:8080/payment/verify-transaction'/>
+    <input type='hidden' name='MID' value='12130598'/>
+</form>
+<!-- /.container -->
+
+</body>
+<script type="text/javascript">
+    window.onload = function(){
+        document.forms['samanpeyment'].submit();
+    }
+</script>
+</html>
+
