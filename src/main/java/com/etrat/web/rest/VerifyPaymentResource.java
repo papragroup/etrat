@@ -1,6 +1,7 @@
 package com.etrat.web.rest;
 
 import com.etrat.domain.Transaction;
+import com.etrat.domain.TransactionStatus;
 import com.etrat.service.TransactionService;
 import com.etrat.testverify.PaymentIFBindingLocator;
 import com.etrat.testverify.PaymentIFBindingSoap;
@@ -55,15 +56,22 @@ public class VerifyPaymentResource {
         //            throw new InvalidAmountException();
         //        }
         transaction.setRefrence(Long.valueOf(param.get("refid")));
+        transaction.setTransactionStatus(TransactionStatus.PENDING_VERIFY);
         transactionService.save(transaction);
         VerifyResponse refid = paypingUtil.verify(param.get("refid"), transaction.getAmount().intValue());
         VariziHami variziHami = new VariziHami();
-        variziHami.setCodehami("161000");
+        variziHami.setCodehami(transaction.getUser().getLogin());
         variziHami.setCodehesab(transaction.getType().getId());
         variziHami.setMablagh(String.valueOf(transaction.getAmount().intValue()));
         variziHami.setVariziType("21");
         variziHami.setTarixVarizi("13990520");
-        Long refrenceId = etratWarpperUtil.saveInEtratWrapper(variziHami);
+        try {
+            Long refrenceId = etratWarpperUtil.saveInEtratWrapper(variziHami);
+            transaction.setTransactionStatus(TransactionStatus.SUCCESS_VERIFY);
+        } catch (Exception e) {
+            transaction.setTransactionStatus(TransactionStatus.FAILED_NOTIFY_WRAPPER);
+        }
+        transactionService.save(transaction);
         //        PaymentIFBindingLocator paymentIFBindingSoapStub = new PaymentIFBindingLocator();
         //        PaymentIFBindingSoap paymentIFBinding = null;
         //        paymentIFBinding = getPaymentIFBindingSoap(paymentIFBindingSoapStub, paymentIFBinding);

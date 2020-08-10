@@ -17,24 +17,9 @@ import org.springframework.web.bind.annotation.*;
  */
 @Controller
 public class PaymentForm {
-    @Autowired
-    private PaypingUtil paypingUtil;
-
-    @Autowired
-    TransactionService transactionService;
-
-    @Autowired
-    private TransactionTypeRepository transactionTypeRepository;
 
     @GetMapping("/gateway/payment")
-    public String main(@RequestParam(name = "amount") Integer amount, Model model) {
-        model.addAttribute("amount", amount);
-        TransactionType transactionType = transactionTypeRepository.findById("00").get();
-        Transaction transaction = new Transaction();
-        transaction.setAmount(new BigDecimal(amount));
-        transaction.setType(transactionType);
-        Transaction save = transactionService.save(transaction);
-        String code = paypingUtil.genrateCode(amount, save.getId());
+    public String main(@RequestParam(name = "code") String code, Model model) {
         model.addAttribute("code", code);
         return "paypingPaymentform";
     }

@@ -5,4 +5,5 @@ public enum TransactionStatus {
     PENDING_VERIFY,
     SUCCESS_VERIFY,
     FAILED_VERIFY,
+    FAILED_NOTIFY_WRAPPER,
 }
