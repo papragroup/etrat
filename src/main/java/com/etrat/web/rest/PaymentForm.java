@@ -26,10 +26,10 @@ public class PaymentForm {
     @Autowired
     private TransactionTypeRepository transactionTypeRepository;
 
-    @GetMapping("/api/gateway/payment")
-    public String main(@RequestParam(name = "code") Integer amount, Model model) {
+    @GetMapping("/gateway/payment")
+    public String main(@RequestParam(name = "amount") Integer amount, Model model) {
         model.addAttribute("amount", amount);
-        TransactionType transactionType = transactionTypeRepository.findById("0").get();
+        TransactionType transactionType = transactionTypeRepository.findById("00").get();
         Transaction transaction = new Transaction();
         transaction.setAmount(new BigDecimal(amount));
         transaction.setType(transactionType);
