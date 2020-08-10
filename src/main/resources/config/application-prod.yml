@@ -130,7 +130,7 @@ jhipster:
 # https://www.jhipster.tech/common-application-properties/
 # ===================================================================
 
-payping-redirect-url: http://192.168.101.221/payment/verify-transaction
+payping-redirect-url: http://192.168.101.221:8080/payment/verify-transaction
 payping-token: e6ef35828377af01f69c283a40efa538b67bb8cfd13cd93e97bb71035c8fdb25
 payping-base-url: https://api.payping.ir/v2
 etrat-warrper-url: http://etrat-warapper:8081
