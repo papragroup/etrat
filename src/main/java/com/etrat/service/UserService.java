@@ -2,6 +2,7 @@ package com.etrat.service;
 
 import com.etrat.config.Constants;
 import com.etrat.domain.Authority;
+import com.etrat.domain.Transaction;
 import com.etrat.domain.User;
 import com.etrat.repository.AuthorityRepository;
 import com.etrat.repository.UserRepository;
@@ -250,6 +251,11 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public Page<UserDTO> getAllManagedUsers(Pageable pageable) {
+        Set<Transaction> transactions = userRepository
+            .findAllByLoginNot(pageable, Constants.ANONYMOUS_USER)
+            .getContent()
+            .get(0)
+            .getTransactions();
         return userRepository.findAllByLoginNot(pageable, Constants.ANONYMOUS_USER).map(UserDTO::new);
     }
 

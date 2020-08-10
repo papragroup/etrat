@@ -113,3 +113,6 @@ jhipster:
 # ===================================================================
 
 # application:
+payping-redirect-url: http://localhost:8080/payment/verify-transaction
+payping-token: e6ef35828377af01f69c283a40efa538b67bb8cfd13cd93e97bb71035c8fdb25
+payping-base-url: https://api.payping.ir/v2

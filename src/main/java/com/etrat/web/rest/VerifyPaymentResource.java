@@ -1,14 +1,26 @@
 package com.etrat.web.rest;
 
 import com.etrat.domain.Transaction;
+import com.etrat.service.TransactionService;
 import com.etrat.testverify.PaymentIFBindingLocator;
 import com.etrat.testverify.PaymentIFBindingSoap;
+import com.etrat.util.EtratWarpperUtil;
+import com.etrat.util.PaypingUtil;
+import com.etrat.util.VariziHami;
+import com.etrat.util.VerifyResponse;
+import com.etrat.web.rest.errors.InvalidAmountException;
+import com.etrat.web.rest.errors.RefIdNotFoundException;
 import java.rmi.RemoteException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import javax.xml.rpc.ServiceException;
 import org.apache.axis.AxisProperties;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * REST controller for managing {@link Transaction}.
@@ -16,10 +28,42 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping("/payment")
 public class VerifyPaymentResource {
+    @Autowired
+    private PaypingUtil paypingUtil;
+
+    @Autowired
+    private TransactionService transactionService;
+
+    @Autowired
+    private EtratWarpperUtil etratWarpperUtil;
 
     @PostMapping("/verify-transaction")
-    public String createTransaction(Model model/*,@RequestBody String  paymentResponse*/) {
-        //        String s1 = paymentResponse.split("RefNum=")[1].split("&")[0];
+    public String createTransaction(Model model, @RequestBody String paymentResponse) {
+        Map<String, String> param = new HashMap<>();
+        Arrays
+            .stream(paymentResponse.split("&"))
+            .forEach(
+                p -> {
+                    String[] split = p.split("=");
+                    param.put(split[0], split[1]);
+                }
+            );
+        Transaction transaction = transactionService
+            .findOne(Long.valueOf(param.get("clientrefid")))
+            .orElseThrow(() -> new RefIdNotFoundException());
+        //        if (transaction.getAmount().intValue()!=Integer.valueOf(param.get("amount"))){
+        //            throw new InvalidAmountException();
+        //        }
+        transaction.setRefrence(Long.valueOf(param.get("refid")));
+        transactionService.save(transaction);
+        VerifyResponse refid = paypingUtil.verify(param.get("refid"), transaction.getAmount().intValue());
+        VariziHami variziHami = new VariziHami();
+        variziHami.setCodehami("161000");
+        variziHami.setCodehesab(transaction.getType().getId());
+        variziHami.setMablagh(String.valueOf(transaction.getAmount().intValue()));
+        variziHami.setVariziType("21");
+        variziHami.setTarixVarizi("13990520");
+        Long refrenceId = etratWarpperUtil.saveInEtratWrapper(variziHami);
         //        PaymentIFBindingLocator paymentIFBindingSoapStub = new PaymentIFBindingLocator();
         //        PaymentIFBindingSoap paymentIFBinding = null;
         //        paymentIFBinding = getPaymentIFBindingSoap(paymentIFBindingSoapStub, paymentIFBinding);

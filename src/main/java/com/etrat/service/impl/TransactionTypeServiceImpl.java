@@ -1,16 +1,14 @@
 package com.etrat.service.impl;
 
-import com.etrat.service.TransactionTypeService;
 import com.etrat.domain.TransactionType;
 import com.etrat.repository.TransactionTypeRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
+import com.etrat.service.TransactionTypeService;
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Service Implementation for managing {@link TransactionType}.
@@ -18,7 +16,6 @@ import java.util.Optional;
 @Service
 @Transactional
 public class TransactionTypeServiceImpl implements TransactionTypeService {
-
     private final Logger log = LoggerFactory.getLogger(TransactionTypeServiceImpl.class);
 
     private final TransactionTypeRepository transactionTypeRepository;
@@ -51,7 +48,6 @@ public class TransactionTypeServiceImpl implements TransactionTypeService {
         return transactionTypeRepository.findAll();
     }
 
-
     /**
      * Get one transactionType by id.
      *
@@ -62,7 +58,7 @@ public class TransactionTypeServiceImpl implements TransactionTypeService {
     @Transactional(readOnly = true)
     public Optional<TransactionType> findOne(Long id) {
         log.debug("Request to get TransactionType : {}", id);
-        return transactionTypeRepository.findById(id);
+        return transactionTypeRepository.findById(id.toString());
     }
 
     /**
@@ -73,6 +69,6 @@ public class TransactionTypeServiceImpl implements TransactionTypeService {
     @Override
     public void delete(Long id) {
         log.debug("Request to delete TransactionType : {}", id);
-        transactionTypeRepository.deleteById(id);
+        transactionTypeRepository.deleteById(id.toString());
     }
 }

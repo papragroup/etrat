@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+
+    <!--
+        Added the entity Transaction.
+    -->
+    <changeSet id="20200611074918-1" author="jhipster">
+        <addColumn tableName="transaction">
+            <column name="secure_pan" type="varchar(255)"></column>
+        </addColumn>
+        <addColumn tableName="transaction">
+            <column name="transaction_status" type="varchar(255)"></column>
+        </addColumn>
+        <addColumn tableName="transaction">
+            <column name="user_id" type="bigint"></column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="2" author="arsham">
+
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="transaction"
+                                 constraintName="fk_user_id_state"
+                                 deferrable="false"
+                                 initiallyDeferred="false"
+                                 onDelete="NO ACTION"
+                                 onUpdate="NO ACTION"
+                                 referencedColumnNames="id"
+                                 referencedTableName="jhi_user"/>
+    </changeSet>
+</databaseChangeLog>

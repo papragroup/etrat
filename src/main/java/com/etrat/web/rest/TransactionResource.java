@@ -1,14 +1,26 @@
 package com.etrat.web.rest;
 
 import com.etrat.domain.Transaction;
+import com.etrat.domain.TransactionStatus;
+import com.etrat.domain.TransactionType;
+import com.etrat.domain.User;
 import com.etrat.repository.TransactionRepository;
+import com.etrat.repository.TransactionTypeRepository;
+import com.etrat.repository.UserRepository;
+import com.etrat.security.SecurityUtils;
 import com.etrat.service.TransactionService;
 import com.etrat.service.dto.HesabDTO;
+import com.etrat.service.dto.TransactionToken;
+import com.etrat.util.PaypingUtil;
 import com.etrat.web.rest.errors.BadRequestAlertException;
-
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
+import java.math.BigDecimal;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,14 +29,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 /**
  * REST controller for managing {@link com.etrat.domain.Transaction}.
@@ -32,7 +39,6 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api")
 public class TransactionResource {
-
     private final Logger log = LoggerFactory.getLogger(TransactionResource.class);
 
     private static final String ENTITY_NAME = "transaction";
@@ -59,6 +65,7 @@ public class TransactionResource {
 
     @Autowired
     private TransactionRepository transactionRepository;
+
     @PostMapping("/transactions")
     public ResponseEntity<Transaction> createTransaction(@RequestBody Transaction transaction) throws URISyntaxException {
         log.debug("REST request to save Transaction : {}", transaction);
@@ -66,15 +73,15 @@ public class TransactionResource {
             throw new BadRequestAlertException("A new transaction cannot already have an ID", ENTITY_NAME, "idexists");
         }
         Transaction result = transactionRepository.save(transaction);
-        return ResponseEntity.created(new URI("/api/transactions/" + result.getId()))
+        return ResponseEntity
+            .created(new URI("/api/transactions/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
     @PostMapping("/verify-transaction")
-    public void createTransaction( String  paymentResponse) {
+    public void createTransaction(String paymentResponse) {
         System.out.println(paymentResponse);
-
     }
 
     /**
@@ -93,7 +100,8 @@ public class TransactionResource {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         Transaction result = transactionService.save(transaction);
-        return ResponseEntity.ok()
+        return ResponseEntity
+            .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, transaction.getId().toString()))
             .body(result);
     }
@@ -130,6 +138,35 @@ public class TransactionResource {
         return ResponseUtil.wrapOrNotFound(transaction);
     }
 
+    @Autowired
+    private PaypingUtil paypingUtil;
+
+    @Autowired
+    private TransactionTypeRepository transactionTypeRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @GetMapping("/transactions/code")
+    public ResponseEntity<TransactionToken> getTrancactionCode(
+        @RequestParam(name = "amount") Integer amount,
+        @RequestParam(name = "type-id") String tarnsactionType
+    ) {
+        Optional<String> currentUserLogin = SecurityUtils.getCurrentUserLogin();
+        Optional<User> oneByLogin = userRepository.findOneByLogin(currentUserLogin.get());
+        TransactionType transactionType = transactionTypeRepository.findById(tarnsactionType).get();
+        Transaction transaction = new Transaction();
+        transaction.setAmount(new BigDecimal(amount));
+        transaction.setTransactionStatus(TransactionStatus.CREATE);
+        transaction.setUser(oneByLogin.get());
+        transaction.setType(transactionType);
+        Transaction save = transactionService.save(transaction);
+        String code = paypingUtil.genrateCode(amount, save.getId());
+        TransactionToken transactionToken = new TransactionToken();
+        transactionToken.setToken(code);
+        return ResponseUtil.wrapOrNotFound(Optional.of(transactionToken));
+    }
+
     /**
      * {@code DELETE  /transactions/:id} : delete the "id" transaction.
      *
@@ -140,6 +177,9 @@ public class TransactionResource {
     public ResponseEntity<Void> deleteTransaction(@PathVariable Long id) {
         log.debug("REST request to delete Transaction : {}", id);
         transactionService.delete(id);
-        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
+        return ResponseEntity
+            .noContent()
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
+            .build();
     }
 }

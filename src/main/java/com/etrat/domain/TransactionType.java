@@ -1,9 +1,7 @@
 package com.etrat.domain;
 
-
-import javax.persistence.*;
-
 import java.io.Serializable;
+import javax.persistence.*;
 
 /**
  * A TransactionType.
@@ -11,22 +9,19 @@ import java.io.Serializable;
 @Entity
 @Table(name = "transaction_type")
 public class TransactionType implements Serializable {
-
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     @Column(name = "description")
     private String description;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -42,6 +37,7 @@ public class TransactionType implements Serializable {
     public void setDescription(String description) {
         this.description = description;
     }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override

@@ -1,7 +1,6 @@
 package com.etrat.repository;
 
 import com.etrat.domain.TransactionType;
-
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 
@@ -10,5 +9,4 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface TransactionTypeRepository extends JpaRepository<TransactionType, Long> {
-}
+public interface TransactionTypeRepository extends JpaRepository<TransactionType, String> {}

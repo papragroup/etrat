@@ -13,11 +13,8 @@
 
 <body>
 
-<form id='samanpeyment' action='https://sep.shaparak.ir/payment.aspx' method='post'>
-    <input type='hidden' name='Amount' th:value="${amount}" />
-    <input type='hidden' name='ResNum' value='1'>
-    <input type='hidden' name='RedirectURL' value='http://192.168.101.195:8080/payment/verify-transaction'/>
-    <input type='hidden' name='MID' value='12130598'/>
+<form th:action="@{https://api.payping.ir/v2/pay/gotoipg/__${code}__}" method="get"  name="samanpeyment">
+
 </form>
 <!-- /.container -->
 

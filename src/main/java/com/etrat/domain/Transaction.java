@@ -1,10 +1,8 @@
 package com.etrat.domain;
 
-
-import javax.persistence.*;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
+import javax.persistence.*;
 
 /**
  * A Transaction.
@@ -12,7 +10,6 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "transaction")
 public class Transaction implements Serializable {
-
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -28,9 +25,42 @@ public class Transaction implements Serializable {
     @Column(name = "refrence")
     private Long refrence;
 
+    private String securePan;
+
+    @Enumerated
+    private TransactionStatus transactionStatus;
+
     @OneToOne
     @JoinColumn(unique = true)
     private TransactionType type;
+
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public String getSecurePan() {
+        return securePan;
+    }
+
+    public void setSecurePan(String securePan) {
+        this.securePan = securePan;
+    }
+
+    public TransactionStatus getTransactionStatus() {
+        return transactionStatus;
+    }
+
+    public void setTransactionStatus(TransactionStatus transactionStatus) {
+        this.transactionStatus = transactionStatus;
+    }
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -92,6 +122,7 @@ public class Transaction implements Serializable {
     public void setType(TransactionType transactionType) {
         this.type = transactionType;
     }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
