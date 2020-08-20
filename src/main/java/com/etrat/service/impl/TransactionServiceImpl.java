@@ -1,17 +1,17 @@
 package com.etrat.service.impl;
 
-import com.etrat.service.TransactionService;
 import com.etrat.domain.Transaction;
+import com.etrat.domain.TransactionStatus;
+import com.etrat.domain.User;
 import com.etrat.repository.TransactionRepository;
+import com.etrat.service.TransactionService;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 /**
  * Service Implementation for managing {@link Transaction}.
@@ -19,7 +19,6 @@ import java.util.Optional;
 @Service
 @Transactional
 public class TransactionServiceImpl implements TransactionService {
-
     private final Logger log = LoggerFactory.getLogger(TransactionServiceImpl.class);
 
     private final TransactionRepository transactionRepository;
@@ -53,6 +52,12 @@ public class TransactionServiceImpl implements TransactionService {
         return transactionRepository.findAll(pageable);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public Page<Transaction> findByUser(User user, Pageable pageable) {
+        log.debug("Request to get all Transactions");
+        return transactionRepository.findByUserAndTransactionStatus(user, TransactionStatus.SUCCESS_VERIFY, pageable);
+    }
 
     /**
      * Get one transaction by id.

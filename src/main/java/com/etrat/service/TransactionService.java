@@ -1,17 +1,16 @@
 package com.etrat.service;
 
 import com.etrat.domain.Transaction;
-
+import com.etrat.domain.User;
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
-import java.util.Optional;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Service Interface for managing {@link Transaction}.
  */
 public interface TransactionService {
-
     /**
      * Save a transaction.
      *
@@ -28,6 +27,8 @@ public interface TransactionService {
      */
     Page<Transaction> findAll(Pageable pageable);
 
+    @Transactional(readOnly = true)
+    Page<Transaction> findByUser(User user, Pageable pageable);
 
     /**
      * Get the "id" transaction.

@@ -120,6 +120,16 @@ public class TransactionResource {
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
+    @GetMapping("/transactions/user")
+    public ResponseEntity<List<Transaction>> getAllTransactionsUser(Pageable pageable) {
+        log.debug("REST request to get a page of Transactions");
+        String user = SecurityUtils.getCurrentUserLogin().get();
+        User currentUser = userRepository.findOneByLogin(user).get();
+        Page<Transaction> page = transactionService.findByUser(currentUser, pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
     @GetMapping("/payment-type")
     public ResponseEntity<HesabDTO> getPaymentType() {
         return ResponseEntity.ok().body(hesabDTO);
