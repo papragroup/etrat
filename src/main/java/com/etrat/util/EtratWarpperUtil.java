@@ -45,6 +45,8 @@ public class EtratWarpperUtil {
             try {
                 UserDTO user = new UserDTO();
                 user.setLogin(hami.getShenase().toString());
+                user.setFirstName(hami.getFirstName());
+                user.setLastName(hami.getLastName());
                 userService.registerUser(user, hami.getShenase().toString());
             } catch (Exception e) {
                 e.printStackTrace();

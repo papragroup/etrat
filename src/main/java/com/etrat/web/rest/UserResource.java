@@ -4,6 +4,7 @@ import com.etrat.config.Constants;
 import com.etrat.domain.User;
 import com.etrat.repository.UserRepository;
 import com.etrat.security.AuthoritiesConstants;
+import com.etrat.security.SecurityUtils;
 import com.etrat.service.MailService;
 import com.etrat.service.UserService;
 import com.etrat.service.dto.UserDTO;
@@ -158,16 +159,10 @@ public class UserResource {
         return userService.getAuthorities();
     }
 
-    /**
-     * {@code GET /users/:login} : get the "login" user.
-     *
-     * @param login the login of the user to find.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the "login" user, or with status {@code 404 (Not Found)}.
-     */
-    @GetMapping("/users/{login:" + Constants.LOGIN_REGEX + "}")
-    public ResponseEntity<UserDTO> getUser(@PathVariable String login) {
-        log.debug("REST request to get User : {}", login);
-        return ResponseUtil.wrapOrNotFound(userService.getUserWithAuthoritiesByLogin(login).map(UserDTO::new));
+    @GetMapping("/user")
+    public ResponseEntity<User> getUser() {
+        String currentUserLogin = SecurityUtils.getCurrentUserLogin().get();
+        return ResponseUtil.wrapOrNotFound(userRepository.findOneByLogin(currentUserLogin));
     }
 
     /**
