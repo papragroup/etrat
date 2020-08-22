@@ -56,7 +56,7 @@ public class TransactionResource {
     }
 
     /**
-     * {@code POST  /transactions} : Create a new transaction.
+     * {@code POST  /transactions} : Ceate a new transaction.
      *
      * @param transaction the transaction to create.
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new transaction, or with status {@code 400 (Bad Request)} if the transaction has already an ID.
