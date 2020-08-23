@@ -1,12 +1,93 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<h1>
-<a href="app://deepLink">test depplink</a>
-    </h1>
-<!--<script type="text/javascript">-->
-<!--    window.onload = function(){-->
-<!--        document.forms['samanpeyment'].submit();-->
-<!--    }-->
-<!--</script>-->
-</html>
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Success Payment</title>
+</head>
+
+<style>
+    @font-face {
+        font-family: yekan;
+        src: url(public/font/Yekan.ttf);
+    }
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        background-image: url(public/images/DeepLinkBack.png);
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: contain;
+        background-position: center;
+        font-family: yekan;
+    }
+
+    .qwe {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border-radius: 10px;
+        background-color: rgba(165, 220, 181, 0.692);
+        padding: 30px;
+    }
+    .successimage {
+        margin: 0 auto;
+        text-align: center;
+        margin: 15px;
+        padding: 40px;
+    }
+
+    .deeplinktext {
+        text-align: center;
+        font-size: 15px;
+        color: #1e5c2e;
+        margin: 8px;
+    }
+
+    .numberpayment {
+        text-align: center;
+        font-size: 10px;
+        color: #1e5c2e;
+        margin: 15px;
+    }
+
+    .button {
+        text-align: center;
+        margin: 15;
+    }
+    .btn{
+        padding: 12px;
+        border-radius: 10px;
+        color: #20cc3c;
+        border: 0;
+    }
+    a{
+        text-decoration: none;
+        font-family: yekan;
+    }
+</style>
+
+<body>
+<div class="qwe">
+    <div class="successimage">
+        <img th:src="@{public/images/Success.png}" alt="" width="100px" height="100px">
+    </div>
+    <h1 class="deeplinktext"> پرداخت شما با موفقیت انجام شد</h1>
+    <!--<h3 class="numberpayment">شماره پرداخت شما :135942</h3>-->
+    <div class="button">
+        <a href="app://deepLink">
+            <button class="btn" >بازکشت به اپلیکیشن</button>
+        </a>
+
+    </div>
+
+
+</div>
+</body>
+
+</html>
