@@ -13,6 +13,7 @@ import com.etrat.web.rest.errors.InvalidAmountException;
 import com.etrat.web.rest.errors.RefIdNotFoundException;
 import java.rmi.RemoteException;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import javax.xml.rpc.ServiceException;
@@ -57,6 +58,7 @@ public class VerifyPaymentResource {
         //        }
         transaction.setRefrence(Long.valueOf(param.get("refid")));
         transaction.setTransactionStatus(TransactionStatus.PENDING_VERIFY);
+        transaction.setCreateDate(Calendar.getInstance().getTime().getTime());
         transactionService.save(transaction);
         VerifyResponse refid = paypingUtil.verify(param.get("refid"), transaction.getAmount().intValue());
         VariziHami variziHami = new VariziHami();

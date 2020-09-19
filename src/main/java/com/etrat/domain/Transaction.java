@@ -1,7 +1,11 @@
 package com.etrat.domain;
 
+import com.ibm.icu.text.DateFormat;
+import com.ibm.icu.text.SimpleDateFormat;
+import com.ibm.icu.util.ULocale;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Calendar;
 import javax.persistence.*;
 
 /**
@@ -34,9 +38,39 @@ public class Transaction implements Serializable {
     @JoinColumn(unique = true)
     private TransactionType type;
 
+    @Column
+    private Long createDate;
+
+    private String createDateFormat;
+
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @PostLoad
+    public void doStuff() {
+        ULocale locale = new ULocale("fa_IR@calendar=persian");
+        DateFormat outputFormat = new SimpleDateFormat("EEE / dd MMMM yyyyy hh:mm", locale);
+        this.createDateFormat = outputFormat.format(createDate);
+    }
+
+    public Long getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Long createDate) {
+        this.createDate = createDate;
+    }
+
+    public String getCreateDateFormat() {
+        ULocale locale = new ULocale("fa_IR@calendar=persian");
+        DateFormat outputFormat = new SimpleDateFormat("EEE / dd MMMM yyyyy hh:mm", locale);
+        return outputFormat.format(this.createDate);
+    }
+
+    public void setCreateDateFormat(String createDateFormat) {
+        this.createDateFormat = createDateFormat;
+    }
 
     public User getUser() {
         return user;
