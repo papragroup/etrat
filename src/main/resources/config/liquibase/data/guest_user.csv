@@ -1,0 +1,2 @@
+id;login;password_hash;first_name;email;image_url;activated;lang_key;created_by;last_modified_by;created_date
+100000;mehman;$2a$10$PkkubQp/pei6jC5KuD7zD.d0BMU0dZVp2SsGgU1YYHLRt808tCFsC;مهمان;user@localhost;;true;en;system;system;2020-08-20 10:51:53

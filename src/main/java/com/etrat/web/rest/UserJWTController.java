@@ -111,7 +111,7 @@ public class UserJWTController extends SmsData {
     public ResponseEntity<JWTToken> verify(@RequestParam(name = "phone-number") String phoneNumber, @RequestParam(name = "otp") String otp)
         throws IllegalAccessException {
         if (otpMap.get(phoneNumber).equals(otp)) {
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken("1671956", "1671956");
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken("mehman", "1671956");
 
             Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);
