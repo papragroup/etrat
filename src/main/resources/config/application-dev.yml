@@ -15,9 +15,7 @@
 
 logging:
   level:
-    ROOT: DEBUG
-    io.github.jhipster: DEBUG
-    com.etrat: DEBUG
+    ROOT: info
 
 spring:
   profiles:
