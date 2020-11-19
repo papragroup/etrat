@@ -38,6 +38,7 @@ public class VerifyPaymentResource {
     @PostMapping("/verify-transaction")
     public String createTransaction(Model model, @RequestBody String paymentResponse) {
         Map<String, String> param = new HashMap<>();
+        System.out.println(paymentResponse);
         Arrays
             .stream(paymentResponse.split("&"))
             .forEach(
