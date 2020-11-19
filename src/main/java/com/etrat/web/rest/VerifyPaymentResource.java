@@ -66,12 +66,14 @@ public class VerifyPaymentResource {
         ULocale locale = new ULocale("fa_IR@calendar=persian");
         DateFormat outputFormat = new SimpleDateFormat("yyyyMMdd", locale);
         variziHami.setTarixVarizi(outputFormat.format(new Date()));
-        try {
-            Optional<String> currentUserLogin = SecurityUtils.getCurrentUserLogin();
-            Long refrenceId = etratWarpperUtil.saveInEtratWrapper(variziHami);
-            transaction.setTransactionStatus(TransactionStatus.SUCCESS_VERIFY);
-        } catch (Exception e) {
-            transaction.setTransactionStatus(TransactionStatus.FAILED_NOTIFY_WRAPPER);
+        transaction.setTransactionStatus(TransactionStatus.SUCCESS_VERIFY);
+        if (!transaction.getUser().getId().equals(100000)) {
+            try {
+                Optional<String> currentUserLogin = SecurityUtils.getCurrentUserLogin();
+                Long refrenceId = etratWarpperUtil.saveInEtratWrapper(variziHami);
+            } catch (Exception e) {
+                transaction.setTransactionStatus(TransactionStatus.FAILED_NOTIFY_WRAPPER);
+            }
         }
         transactionService.save(transaction);
 
