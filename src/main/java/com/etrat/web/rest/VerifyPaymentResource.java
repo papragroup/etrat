@@ -4,26 +4,21 @@ import com.etrat.domain.Transaction;
 import com.etrat.domain.TransactionStatus;
 import com.etrat.security.SecurityUtils;
 import com.etrat.service.TransactionService;
-import com.etrat.testverify.PaymentIFBindingLocator;
-import com.etrat.testverify.PaymentIFBindingSoap;
 import com.etrat.util.EtratWarpperUtil;
 import com.etrat.util.PaypingUtil;
 import com.etrat.util.VariziHami;
 import com.etrat.util.VerifyResponse;
-import com.etrat.web.rest.errors.InvalidAmountException;
 import com.etrat.web.rest.errors.RefIdNotFoundException;
 import com.ibm.icu.text.DateFormat;
 import com.ibm.icu.text.SimpleDateFormat;
 import com.ibm.icu.util.ULocale;
-import java.rmi.RemoteException;
 import java.util.*;
-import javax.xml.rpc.ServiceException;
-import org.apache.axis.AxisProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * REST controller for managing {@link Transaction}.
@@ -80,23 +75,6 @@ public class VerifyPaymentResource {
         transactionService.save(transaction);
 
         return "deeplink";
-    }
-
-    private PaymentIFBindingSoap getPaymentIFBindingSoap(
-        PaymentIFBindingLocator paymentIFBindingSoapStub,
-        PaymentIFBindingSoap paymentIFBinding
-    ) {
-        try {
-            AxisProperties.getProperties().put("proxySet", "true");
-            AxisProperties.setProperty("http.proxyHost", "us-east-1-static-hopper.statica.io");
-            AxisProperties.setProperty("http.proxyPort", "9293");
-            AxisProperties.setProperty("http.proxyUser", "statica4181");
-            AxisProperties.setProperty("http.proxyPassword", "06361dccd7ec80fb");
-            paymentIFBinding = (PaymentIFBindingSoap) paymentIFBindingSoapStub.getPort(PaymentIFBindingSoap.class);
-        } catch (ServiceException e) {
-            e.printStackTrace();
-        }
-        return paymentIFBinding;
     }
     //
     //    @GetMapping("/verify-transaction")
