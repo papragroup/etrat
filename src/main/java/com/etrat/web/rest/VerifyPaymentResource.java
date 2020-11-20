@@ -58,6 +58,7 @@ public class VerifyPaymentResource {
         //        if (transaction.getAmount().intValue()!=Integer.valueOf(param.get("amount"))){
         //            throw new InvalidAmountException();
         //        }
+        log.error("ref-id result " + transaction.getId());
         transaction.setRefrence(Long.valueOf(param.get("refid")));
         transaction.setTransactionStatus(TransactionStatus.PENDING_VERIFY);
         transaction.setCreateDate(Calendar.getInstance().getTime().getTime());
