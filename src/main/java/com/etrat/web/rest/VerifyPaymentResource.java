@@ -13,6 +13,8 @@ import com.ibm.icu.text.DateFormat;
 import com.ibm.icu.text.SimpleDateFormat;
 import com.ibm.icu.util.ULocale;
 import java.util.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,10 +37,13 @@ public class VerifyPaymentResource {
     @Autowired
     private EtratWarpperUtil etratWarpperUtil;
 
+    private final Logger log = LoggerFactory.getLogger(UserResource.class);
+
     @PostMapping("/verify-transaction")
     public String createTransaction(Model model, @RequestBody String paymentResponse) {
         Map<String, String> param = new HashMap<>();
         System.out.println(paymentResponse);
+        log.error(paymentResponse);
         Arrays
             .stream(paymentResponse.split("&"))
             .forEach(
