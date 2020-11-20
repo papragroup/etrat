@@ -49,7 +49,7 @@ public class VerifyPaymentResource {
             .forEach(
                 p -> {
                     String[] split = p.split("=");
-                    param.put(split[0], split[1]);
+                    if (split.length == 2) param.put(split[0], split[1]);
                 }
             );
         Transaction transaction = transactionService
