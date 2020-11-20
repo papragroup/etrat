@@ -82,6 +82,7 @@ public class VerifyPaymentResource {
                 Optional<String> currentUserLogin = SecurityUtils.getCurrentUserLogin();
                 Long refrenceId = etratWarpperUtil.saveInEtratWrapper(variziHami);
             } catch (Exception e) {
+                log.error(e.getMessage());
                 transaction.setTransactionStatus(TransactionStatus.FAILED_NOTIFY_WRAPPER);
             }
         }
