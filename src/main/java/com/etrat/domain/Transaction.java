@@ -47,18 +47,14 @@ public class Transaction implements Serializable {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @PostLoad
-    public void doStuff() {
-        ULocale locale = new ULocale("fa_IR@calendar=persian");
-        DateFormat outputFormat = new SimpleDateFormat("EEE / dd MMMM yyyyy hh:mm", locale);
-        this.createDateFormat = outputFormat.format(createDate);
-    }
-
     public Long getCreateDate() {
         return createDate;
     }
 
     public void setCreateDate(Long createDate) {
+        ULocale locale = new ULocale("fa_IR@calendar=persian");
+        DateFormat outputFormat = new SimpleDateFormat("EEE / dd MMMM yyyyy hh:mm", locale);
+        this.createDateFormat = outputFormat.format(createDate);
         this.createDate = createDate;
     }
 
