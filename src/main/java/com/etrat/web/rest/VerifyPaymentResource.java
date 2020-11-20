@@ -83,7 +83,7 @@ public class VerifyPaymentResource {
                 Long refrenceId = etratWarpperUtil.saveInEtratWrapper(variziHami);
             } catch (Exception e) {
                 log.error(e.getMessage());
-                transaction.setTransactionStatus(TransactionStatus.FAILED_NOTIFY_WRAPPER);
+                //                transaction.setTransactionStatus(TransactionStatus.FAILED_NOTIFY_WRAPPER);
             }
         }
         transactionService.save(transaction);
