@@ -53,8 +53,8 @@ public class VerifyPaymentResource {
             );
         log.error("ref-id" + param.get("clientrefid"));
         log.error("ref-id" + Long.valueOf(param.get("clientrefid")));
-        Optional<Transaction> one = transactionService.findOne(137l);
-        log.error("sample" + one.get().getId());
+        //        Optional<Transaction> one = transactionService.findOne(137l);
+        //        log.error("sample" + one.get().getId());
 
         Transaction transaction = transactionService
             .findOne(Long.valueOf(param.get("clientrefid")))
