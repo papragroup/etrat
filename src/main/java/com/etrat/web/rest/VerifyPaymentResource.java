@@ -42,7 +42,6 @@ public class VerifyPaymentResource {
     @PostMapping("/verify-transaction")
     public String createTransaction(Model model, @RequestBody String paymentResponse) {
         Map<String, String> param = new HashMap<>();
-        System.out.println(paymentResponse);
         log.error(paymentResponse);
         Arrays
             .stream(paymentResponse.split("&"))
@@ -52,6 +51,7 @@ public class VerifyPaymentResource {
                     if (split.length == 2) param.put(split[0], split[1]);
                 }
             );
+        log.error("ref-id" + param.get("clientrefid"));
         Transaction transaction = transactionService
             .findOne(Long.valueOf(param.get("clientrefid")))
             .orElseThrow(() -> new RefIdNotFoundException());
