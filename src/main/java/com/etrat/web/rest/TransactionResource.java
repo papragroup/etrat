@@ -23,6 +23,7 @@ import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -174,6 +175,7 @@ public class TransactionResource {
         transaction.setTransactionStatus(TransactionStatus.CREATE);
         transaction.setUser(oneByLogin.get());
         transaction.setType(transactionType);
+        transaction.setCreateDate(new Date().getTime());
         Transaction save = transactionService.save(transaction);
         String code = paypingUtil.genrateCode(amount, save.getId());
         TransactionToken transactionToken = new TransactionToken();
