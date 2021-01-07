@@ -1,6 +1,7 @@
 package com.etrat.util;
 
 import com.etrat.domain.HamiLastId;
+import com.etrat.domain.UserType;
 import com.etrat.repository.HamiLastIdRepository;
 import com.etrat.service.UserService;
 import com.etrat.service.dto.Hami;
@@ -47,7 +48,7 @@ public class EtratWarpperUtil {
                 user.setLogin(hami.getShenase().toString());
                 user.setFirstName(hami.getFirstName());
                 user.setLastName(hami.getLastName());
-                userService.registerUser(user, hami.getShenase().toString());
+                userService.registerUser(user, hami.getShenase().toString(), UserType.HAMI);
             } catch (Exception e) {
                 e.printStackTrace();
             }

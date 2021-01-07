@@ -2,6 +2,7 @@ package com.etrat.web.rest;
 
 import com.etrat.domain.Transaction;
 import com.etrat.domain.TransactionStatus;
+import com.etrat.domain.UserType;
 import com.etrat.security.SecurityUtils;
 import com.etrat.service.TransactionService;
 import com.etrat.util.EtratWarpperUtil;
@@ -77,7 +78,7 @@ public class VerifyPaymentResource {
         DateFormat outputFormat = new SimpleDateFormat("yyyyMMdd", locale);
         variziHami.setTarixVarizi(outputFormat.format(new Date()));
         transaction.setTransactionStatus(TransactionStatus.SUCCESS_VERIFY);
-        if (!transaction.getUser().getId().equals(100000)) {
+        if (transaction.getUser().getUserType().equals(UserType.MEHMAN) || transaction.getUser().getUserType() == null) {
             try {
                 Optional<String> currentUserLogin = SecurityUtils.getCurrentUserLogin();
                 Long refrenceId = etratWarpperUtil.saveInEtratWrapper(variziHami);

@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.etrat.EtratApp;
 import com.etrat.config.Constants;
 import com.etrat.domain.User;
+import com.etrat.domain.UserType;
 import com.etrat.repository.AuthorityRepository;
 import com.etrat.repository.UserRepository;
 import com.etrat.security.AuthoritiesConstants;
@@ -94,7 +95,7 @@ public class AccountResourceIT {
         user.setImageUrl("http://placehold.it/50x50");
         user.setLangKey("en");
         user.setAuthorities(authorities);
-        userService.createUser(user);
+        userService.createUser(user, UserType.MEHMAN);
 
         restAccountMockMvc
             .perform(get("/api/account").accept(MediaType.APPLICATION_JSON))
@@ -345,7 +346,7 @@ public class AccountResourceIT {
         assertThat(testUser4.get().getEmail()).isEqualTo("test-register-duplicate-email@example.com");
 
         testUser4.get().setActivated(true);
-        userService.updateUser((new UserDTO(testUser4.get())));
+        userService.updateUser((new UserDTO(testUser4.get())), UserType.MEHMAN);
 
         // Register 4th (already activated) user
         restAccountMockMvc

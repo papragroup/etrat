@@ -1,6 +1,7 @@
 package com.etrat.web.rest;
 
 import com.etrat.domain.User;
+import com.etrat.domain.UserType;
 import com.etrat.repository.UserRepository;
 import com.etrat.security.SecurityUtils;
 import com.etrat.service.MailService;
@@ -37,7 +38,7 @@ public class AccountResource {
 
     private final UserRepository userRepository;
 
-        private final UserService userService;
+    private final UserService userService;
 
     private final MailService mailService;
 
@@ -61,7 +62,7 @@ public class AccountResource {
         if (!checkPasswordLength(managedUserVM.getPassword())) {
             throw new InvalidPasswordException();
         }
-        User user = userService.registerUser(managedUserVM, managedUserVM.getPassword());
+        User user = userService.registerUser(managedUserVM, managedUserVM.getPassword(), UserType.HAMI);
         mailService.sendActivationEmail(user);
     }
 
@@ -130,7 +131,8 @@ public class AccountResource {
             userDTO.getLastName(),
             userDTO.getEmail(),
             userDTO.getLangKey(),
-            userDTO.getImageUrl()
+            userDTO.getImageUrl(),
+            UserType.HAMI
         );
     }
 

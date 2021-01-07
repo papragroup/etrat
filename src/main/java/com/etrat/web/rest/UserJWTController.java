@@ -1,16 +1,20 @@
 package com.etrat.web.rest;
 
+import com.etrat.domain.User;
+import com.etrat.domain.UserType;
 import com.etrat.security.jwt.JWTFilter;
 import com.etrat.security.jwt.TokenProvider;
+import com.etrat.service.UserService;
+import com.etrat.service.dto.OtpDto;
+import com.etrat.service.dto.UserDTO;
 import com.etrat.web.rest.vm.LoginVM;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.github.jhipster.security.RandomUtil;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.text.DecimalFormat;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import javax.validation.Valid;
 import javax.xml.parsers.DocumentBuilder;
@@ -42,13 +46,19 @@ import org.xml.sax.SAXException;
 @RestController
 @RequestMapping("/api")
 public class UserJWTController extends SmsData {
-    Map<String, String> otpMap = new HashMap<>();
+    Map<String, OtpDto> otpMap = new HashMap<>();
     private final TokenProvider tokenProvider;
 
+    private final UserService userService;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
-    public UserJWTController(TokenProvider tokenProvider, AuthenticationManagerBuilder authenticationManagerBuilder) {
+    public UserJWTController(
+        TokenProvider tokenProvider,
+        UserService userService,
+        AuthenticationManagerBuilder authenticationManagerBuilder
+    ) {
         this.tokenProvider = tokenProvider;
+        this.userService = userService;
         this.authenticationManagerBuilder = authenticationManagerBuilder;
     }
 
@@ -71,47 +81,83 @@ public class UserJWTController extends SmsData {
     @GetMapping("/send-otp")
     public ResponseEntity<Void> sendOtp(@RequestParam(name = "phone-number") String phoneNumber)
         throws IOException, SAXException, ParserConfigurationException, TransformerException {
-        String format = new DecimalFormat("0000").format(new Random().nextInt(9999));
-        otpMap.put(phoneNumber, format);
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = factory.newDocumentBuilder();
-        Document doc = builder.parse(new InputSource(new StringReader(body)));
+        if (otpMap.get(phoneNumber) == null || otpMap.get(phoneNumber).getExpireTime() < System.currentTimeMillis()) {
+            String format = new DecimalFormat("0000").format(new Random().nextInt(9999));
+            long currentTimeMillis = System.currentTimeMillis() + (120 * 1000);
+            OtpDto otpDto = new OtpDto();
+            otpDto.setOtp(format);
+            otpDto.setExpireTime(currentTimeMillis);
+            otpMap.put(phoneNumber, otpDto);
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document doc = builder.parse(new InputSource(new StringReader(body)));
 
-        //        Document doc = builder.parse(body);
-        NodeList flowList = doc.getElementsByTagName("tem:cSmsnumber");
-        flowList.item(0).setTextContent(phoneNumber);
-        NodeList smsBody = doc.getElementsByTagName("tem:cBody");
-        smsBody.item(0).setTextContent("کد ورود شما به عترت: " + format);
-        TransformerFactory transformerFactory = TransformerFactory.newInstance();
-        Transformer transformer = transformerFactory.newTransformer();
-        // Write the XML into a buffernode
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
-        StreamResult finalResult = new StreamResult(output);
-        DOMSource source = new DOMSource(doc);
-        transformer.transform(source, finalResult);
-        OkHttpClient client = new OkHttpClient()
-            .newBuilder()
-            .writeTimeout(1, TimeUnit.HOURS)
-            .connectTimeout(1, TimeUnit.HOURS)
-            .readTimeout(1, TimeUnit.HOURS)
-            .build();
-        MediaType mediaType = MediaType.parse("text/xml; charset=utf-8");
-        RequestBody body = RequestBody.create(mediaType, new String(output.toByteArray()));
-        Request request = new Request.Builder()
-            .url("http://mehrafraz.com/webservice/service.asmx")
-            .method("POST", body)
-            .addHeader("SOAPAction", "http://tempuri.org/SendSms")
-            .addHeader("Content-Type", "text/xml; charset=utf-8")
-            .build();
-        Response response = client.newCall(request).execute();
+            //        Document doc = builder.parse(body);
+            NodeList flowList = doc.getElementsByTagName("tem:cSmsnumber");
+            flowList.item(0).setTextContent(phoneNumber);
+            NodeList smsBody = doc.getElementsByTagName("tem:cBody");
+            smsBody.item(0).setTextContent("کد ورود شما به عترت: " + format);
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            // Write the XML into a buffernode
+            ByteArrayOutputStream output = new ByteArrayOutputStream();
+            StreamResult finalResult = new StreamResult(output);
+            DOMSource source = new DOMSource(doc);
+            transformer.transform(source, finalResult);
+            OkHttpClient client = new OkHttpClient()
+                .newBuilder()
+                .writeTimeout(1, TimeUnit.HOURS)
+                .connectTimeout(1, TimeUnit.HOURS)
+                .readTimeout(1, TimeUnit.HOURS)
+                .build();
+            MediaType mediaType = MediaType.parse("text/xml; charset=utf-8");
+            RequestBody body = RequestBody.create(mediaType, new String(output.toByteArray()));
+            Request request = new Request.Builder()
+                .url("http://mehrafraz.com/webservice/service.asmx")
+                .method("POST", body)
+                .addHeader("SOAPAction", "http://tempuri.org/SendSms")
+                .addHeader("Content-Type", "text/xml; charset=utf-8")
+                .build();
+            Response response = client.newCall(request).execute();
+        }
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/verify")
     public ResponseEntity<JWTToken> verify(@RequestParam(name = "phone-number") String phoneNumber, @RequestParam(name = "otp") String otp)
         throws IllegalAccessException {
-        if (otpMap.get(phoneNumber).equals(otp)) {
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken("mehman", "1671956");
+        if (
+            otpMap.get(phoneNumber).getOtp() != null &&
+            otpMap.get(phoneNumber).getOtp().equals(otp) &&
+            otpMap.get(phoneNumber).getExpireTime() > System.currentTimeMillis()
+        ) {
+            String password = RandomUtil.generatePassword();
+            UserDTO userResult = userService
+                .getUserWithAuthoritiesByLogin(phoneNumber)
+                .filter(Objects::nonNull)
+                .map(
+                    u -> {
+                        UserDTO userDTO = new UserDTO();
+                        userDTO.setLogin(phoneNumber);
+                        userDTO.setId(u.getId());
+                        userDTO.setActivated(true);
+                        userDTO.getAuthorities().add("ROLE_USER");
+                        userService.updateUser(userDTO, password, UserType.MEHMAN);
+                        return userDTO;
+                    }
+                )
+                .orElseGet(
+                    () -> {
+                        UserDTO userDTO = new UserDTO();
+                        userDTO.setLogin(phoneNumber);
+                        userDTO.setActivated(false);
+                        userDTO.getAuthorities().add("ROLE_USER");
+                        userService.registerUser(userDTO, password, UserType.MEHMAN);
+                        return userDTO;
+                    }
+                );
+
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(phoneNumber, password);
 
             Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -122,6 +168,16 @@ public class UserJWTController extends SmsData {
         } else {
             throw new IllegalAccessException();
         }
+    }
+
+    public void removeExpire() {
+        otpMap.forEach(
+            (k, v) -> {
+                if (v.getExpireTime() < System.currentTimeMillis()) {
+                    otpMap.remove(k);
+                }
+            }
+        );
     }
 
     /**

@@ -62,6 +62,10 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @Column(name = "image_url", length = 256)
     private String imageUrl;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "user_type")
+    private UserType userType;
+
     @Size(max = 20)
     @Column(name = "activation_key", length = 20)
     @JsonIgnore
@@ -87,6 +91,18 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
     @OneToMany(mappedBy = "user")
     private Set<Transaction> transactions;
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public UserType getUserType() {
+        return userType;
+    }
+
+    public void setUserType(UserType userType) {
+        this.userType = userType;
+    }
 
     public boolean isActivated() {
         return activated;

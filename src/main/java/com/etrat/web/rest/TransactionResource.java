@@ -9,6 +9,7 @@ import com.etrat.repository.TransactionTypeRepository;
 import com.etrat.repository.UserRepository;
 import com.etrat.security.SecurityUtils;
 import com.etrat.service.TransactionService;
+import com.etrat.service.dto.AllTransactions;
 import com.etrat.service.dto.HesabDTO;
 import com.etrat.service.dto.TransactionToken;
 import com.etrat.util.PaypingUtil;
@@ -126,13 +127,20 @@ public class TransactionResource {
     }
 
     @GetMapping("/transactions/user")
-    public ResponseEntity<List<Transaction>> getAllTransactionsUser(Pageable pageable) {
+    public ResponseEntity<AllTransactions> getAllTransactionsUser(Pageable pageable) {
+        AllTransactions allTransactions = new AllTransactions();
         log.debug("REST request to get a page of Transactions");
         String user = SecurityUtils.getCurrentUserLogin().get();
         User currentUser = userRepository.findOneByLogin(user).get();
         Page<Transaction> page = transactionService.findByUser(currentUser, pageable);
+        Long sum = transactionRepository.sumCreditAmount(user);
+        if (sum == null) {
+            sum = 0L;
+        }
+        allTransactions.setTransactions(page.getContent());
+        allTransactions.setSumTransactions(sum);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
-        return ResponseEntity.ok().headers(headers).body(page.getContent());
+        return ResponseEntity.ok().headers(headers).body(allTransactions);
     }
 
     @GetMapping("/payment-type")

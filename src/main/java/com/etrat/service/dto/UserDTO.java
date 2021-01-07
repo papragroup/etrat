@@ -4,6 +4,7 @@ import com.etrat.config.Constants;
 import com.etrat.domain.Authority;
 import com.etrat.domain.User;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.validation.constraints.*;
@@ -45,7 +46,7 @@ public class UserDTO {
 
     private Instant lastModifiedDate;
 
-    private Set<String> authorities;
+    private Set<String> authorities = new HashSet<>();
 
     public UserDTO() {
         // Empty constructor needed for Jackson.

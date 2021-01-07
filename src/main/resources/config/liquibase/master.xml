@@ -25,6 +25,8 @@
     <include file="config/liquibase/changelog/20200808074918_addedcolumn_create_date_format.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20200922074918_add_guestuser.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20200922074918_add_user_auth.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210107120200_added_entity_version.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210107151818_added_column_user_type.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
     <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->
 </databaseChangeLog>

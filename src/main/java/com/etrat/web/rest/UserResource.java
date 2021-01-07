@@ -2,6 +2,7 @@ package com.etrat.web.rest;
 
 import com.etrat.config.Constants;
 import com.etrat.domain.User;
+import com.etrat.domain.UserType;
 import com.etrat.repository.UserRepository;
 import com.etrat.security.AuthoritiesConstants;
 import com.etrat.security.SecurityUtils;
@@ -99,7 +100,7 @@ public class UserResource {
         } else if (userRepository.findOneByEmailIgnoreCase(userDTO.getEmail()).isPresent()) {
             throw new EmailAlreadyUsedException();
         } else {
-            User newUser = userService.createUser(userDTO);
+            User newUser = userService.createUser(userDTO, UserType.HAMI);
             mailService.sendCreationEmail(newUser);
             return ResponseEntity
                 .created(new URI("/api/users/" + newUser.getLogin()))
@@ -128,7 +129,7 @@ public class UserResource {
         if (existingUser.isPresent() && (!existingUser.get().getId().equals(userDTO.getId()))) {
             throw new LoginAlreadyUsedException();
         }
-        Optional<UserDTO> updatedUser = userService.updateUser(userDTO);
+        Optional<UserDTO> updatedUser = userService.updateUser(userDTO, UserType.HAMI);
 
         return ResponseUtil.wrapOrNotFound(
             updatedUser,
