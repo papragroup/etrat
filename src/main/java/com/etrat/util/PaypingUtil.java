@@ -27,7 +27,7 @@ public class PaypingUtil {
 
     public String genrateCode(Integer amount, Long unicId) {
         PaypingCodeResquest paypingCodeResquest = new PaypingCodeResquest();
-        paypingCodeResquest.setAmount(amount);
+        paypingCodeResquest.setAmount(amount / 10);
         paypingCodeResquest.setClientRefId(unicId.toString());
         //        mustGetSecurityContex
         paypingCodeResquest.setPayerName("test");
