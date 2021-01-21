@@ -68,7 +68,7 @@ public class VerifyPaymentResource {
         transaction.setTransactionStatus(TransactionStatus.PENDING_VERIFY);
         transaction.setCreateDate(Calendar.getInstance().getTime().getTime());
         transactionService.save(transaction);
-        VerifyResponse refid = paypingUtil.verify(param.get("refid"), transaction.getAmount().intValue());
+        VerifyResponse refid = paypingUtil.verify(param.get("refid"), transaction.getAmount().intValue() / 10);
         VariziHami variziHami = new VariziHami();
         variziHami.setCodehami(transaction.getUser().getLogin());
         variziHami.setCodehesab(transaction.getType().getId());
