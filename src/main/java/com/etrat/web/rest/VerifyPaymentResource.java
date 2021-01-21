@@ -78,7 +78,7 @@ public class VerifyPaymentResource {
         DateFormat outputFormat = new SimpleDateFormat("yyyyMMdd", locale);
         variziHami.setTarixVarizi(outputFormat.format(new Date()));
         transaction.setTransactionStatus(TransactionStatus.SUCCESS_VERIFY);
-        if (transaction.getUser().getUserType().equals(UserType.MEHMAN) || transaction.getUser().getUserType() == null) {
+        if (transaction.getUser().getUserType() == null || transaction.getUser().getUserType().equals(UserType.MEHMAN)) {
             try {
                 Optional<String> currentUserLogin = SecurityUtils.getCurrentUserLogin();
                 Long refrenceId = etratWarpperUtil.saveInEtratWrapper(variziHami);
