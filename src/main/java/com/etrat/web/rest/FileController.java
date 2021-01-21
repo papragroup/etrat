@@ -19,12 +19,12 @@ public class FileController {
     @Autowired
     ResourceLoader resourceLoader;
 
-    @RequestMapping(path = "/download/{name}", method = RequestMethod.GET)
+    @RequestMapping(path = "/{name}", method = RequestMethod.GET)
     public ResponseEntity<Resource> download(@PathVariable String name) throws IOException {
         // ...
 
         //        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
-        Resource resource1 = resourceLoader.getResource("classpath:" + name);
+        Resource resource1 = resourceLoader.getResource("classpath:/image/" + name);
         return ResponseEntity.ok().contentLength(resource1.getFile().length()).contentType(MediaType.IMAGE_PNG).body(resource1);
     }
 }
