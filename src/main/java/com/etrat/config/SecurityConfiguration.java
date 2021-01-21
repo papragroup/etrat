@@ -25,10 +25,10 @@ import org.zalando.problem.spring.web.advice.security.SecurityProblemSupport;
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final TokenProvider tokenProvider;
 
-    private final CorsFilter corsFilter;
+    private final SimpleCORSFilter corsFilter;
     private final SecurityProblemSupport problemSupport;
 
-    public SecurityConfiguration(TokenProvider tokenProvider, CorsFilter corsFilter, SecurityProblemSupport problemSupport) {
+    public SecurityConfiguration(TokenProvider tokenProvider, SimpleCORSFilter corsFilter, SecurityProblemSupport problemSupport) {
         this.tokenProvider = tokenProvider;
         this.corsFilter = corsFilter;
         this.problemSupport = problemSupport;
@@ -55,7 +55,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
         // @formatter:off
-        http
+        http.cors().and()
             .csrf()
             .disable()
             .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
@@ -101,7 +101,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .httpBasic()
         .and()
             .apply(securityConfigurerAdapter());
-        http.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues());
         // @formatter:on
     }
 
