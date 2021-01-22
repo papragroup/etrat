@@ -74,7 +74,7 @@ public class VerifyPaymentResource {
         variziHami.setCodehesab(transaction.getType().getId());
         variziHami.setMablagh(String.valueOf(transaction.getAmount().intValue()));
         variziHami.setVariziType(transaction.getType().getId());
-        ULocale locale = new ULocale("fa_IR@calendar=persian");
+        ULocale locale = new ULocale("en@calendar=persian");
         DateFormat outputFormat = new SimpleDateFormat("yyyyMMdd", locale);
         variziHami.setTarixVarizi(outputFormat.format(new Date()));
         transaction.setTransactionStatus(TransactionStatus.SUCCESS_VERIFY);
