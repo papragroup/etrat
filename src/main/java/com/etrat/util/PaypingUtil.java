@@ -33,7 +33,7 @@ public class PaypingUtil {
         paypingCodeResquest.setPayerName("test");
         paypingCodeResquest.setReturnUrl(paypingRedirectUrl);
         HttpHeaders headers = new HttpHeaders();
-        headers.set(AUTHORIZATION, "bearer " + paypingToken);
+        headers.set(AUTHORIZATION, "bearer " + "329f76f572cc4d9033d71b6e76d27a43a888ccd2f8e2da1adf780ef52bb57287");
         headers.set(CONTENT_TYPE, "application/json");
         HttpEntity<?> httpEntity = new HttpEntity(paypingCodeResquest, headers);
         PaypingCodeResponse inventoryDto = restTemplate.postForEntity(baseUrl + "/pay", httpEntity, PaypingCodeResponse.class).getBody();
