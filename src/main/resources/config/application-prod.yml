@@ -131,6 +131,6 @@ jhipster:
 # ===================================================================
 
 payping-redirect-url: http://payment.etrat-fatemi.com:8080/payment/verify-transaction
-payping-token: e6ef35828377af01f69c283a40efa538b67bb8cfd13cd93e97bb71035c8fdb25
+payping-token: 329f76f572cc4d9033d71b6e76d27a43a888ccd2f8e2da1adf780ef52bb57287
 payping-base-url: https://api.payping.ir/v2
 etrat-warrper-url: http://etrat-warapper:8081
