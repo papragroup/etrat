@@ -3,7 +3,10 @@ package com.etrat.util;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 
+import com.etrat.service.AuditEventService;
 import javax.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -25,6 +28,8 @@ public class PaypingUtil {
     @Autowired
     private RestTemplate restTemplate;
 
+    private final Logger log = LoggerFactory.getLogger(PaypingUtil.class);
+
     public String genrateCode(Integer amount, Long unicId) {
         PaypingCodeResquest paypingCodeResquest = new PaypingCodeResquest();
         paypingCodeResquest.setAmount(amount / 10);
@@ -33,6 +38,8 @@ public class PaypingUtil {
         paypingCodeResquest.setPayerName("test");
         paypingCodeResquest.setReturnUrl(paypingRedirectUrl);
         HttpHeaders headers = new HttpHeaders();
+        log.error("header: " + "bearer " + "329f76f572cc4d9033d71b6e76d27a43a888ccd2f8e2da1adf780ef52bb57287");
+        log.error("payping redirect: " + paypingRedirectUrl);
         headers.set(AUTHORIZATION, "bearer " + "329f76f572cc4d9033d71b6e76d27a43a888ccd2f8e2da1adf780ef52bb57287");
         headers.set(CONTENT_TYPE, "application/json");
         HttpEntity<?> httpEntity = new HttpEntity(paypingCodeResquest, headers);
