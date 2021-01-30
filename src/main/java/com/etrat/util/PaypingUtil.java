@@ -1,7 +1,6 @@
 package com.etrat.util;
 
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
+import static org.springframework.http.HttpHeaders.*;
 
 import com.etrat.service.AuditEventService;
 import javax.validation.Valid;
@@ -38,10 +37,11 @@ public class PaypingUtil {
         paypingCodeResquest.setPayerName("test");
         paypingCodeResquest.setReturnUrl(paypingRedirectUrl);
         HttpHeaders headers = new HttpHeaders();
-        log.error("header: " + "bearer " + "329f76f572cc4d9033d71b6e76d27a43a888ccd2f8e2da1adf780ef52bb57287");
+        log.error("header: " + "bearer " + "0ae6a7bd09287ec210b6792bd38c83eeb8d6ba55f73e76e6354f8e4aa0faf785");
         log.error("payping redirect: " + paypingRedirectUrl);
-        headers.set(AUTHORIZATION, "bearer " + "329f76f572cc4d9033d71b6e76d27a43a888ccd2f8e2da1adf780ef52bb57287");
+        headers.set(AUTHORIZATION, "bearer " + "0ae6a7bd09287ec210b6792bd38c83eeb8d6ba55f73e76e6354f8e4aa0faf785");
         headers.set(CONTENT_TYPE, "application/json");
+        headers.set(USER_AGENT, "PostmanRuntime/7.26.8");
         HttpEntity<?> httpEntity = new HttpEntity(paypingCodeResquest, headers);
         PaypingCodeResponse inventoryDto = restTemplate.postForEntity(baseUrl + "/pay", httpEntity, PaypingCodeResponse.class).getBody();
         return inventoryDto.getCode();
